@@ -1,8 +1,9 @@
 import { fetchData } from "./fetchData";
 import { ICountry } from "./types";
-import { RegBloc } from "./types";
+import { currencies } from "./types";
+import { regBlocs } from "./types";
 
-const obj: RegBloc = {
+const obj: regBlocs = {
   EU: {
     countries: [],
     population: 0,
@@ -33,7 +34,6 @@ console.log(obj);
 
 async function getNativeName(): Promise<ICountry[]> {
   let countries = await fetchData();
-  console.log(countries);
 
   for (let el of countries) {
     if (el.regionalBlocs != undefined) {
@@ -71,8 +71,31 @@ async function getNativeName(): Promise<ICountry[]> {
   //   }
   // });
 
-  console.log(obj);
   return countries;
 }
 
 getNativeName();
+
+const getCurrencies = async () => {
+  let countries: ICountry[] = await fetchData();
+  console.log(countries);
+
+  for (let el of countries) {
+    if (
+      el.regionalBlocs &&
+      el.regionalBlocs.find((findEl) =>
+        findEl.acronym.includes("EU" || "AU")
+      ) &&
+      el.regionalBlocs !== undefined
+    ) {
+      el.currencies.forEach((elCurr, index, self) => {
+        if (obj.EU.currencies.indexOf(elCurr.name) === -1) {
+          obj.EU.currencies.push(elCurr.name);
+        }
+      });
+    }
+  }
+};
+console.log(obj);
+
+getCurrencies();
