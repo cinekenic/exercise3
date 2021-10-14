@@ -89,6 +89,14 @@ const makeNewObj = (langCode, organizCode, country) => {
       area: 0,
       name: "",
     };
+  } else {
+    // console.log(objectCountries[organizCode].languages[langCode]);
+    objectCountries[organizCode].languages[langCode] = {
+      countries: [],
+      population: 0,
+      area: 0,
+      name: "",
+    };
   }
   objectCountries[organizCode].languages[langCode].countries.push(
     country.alpha3Code
@@ -100,7 +108,7 @@ const makeNewObj = (langCode, organizCode, country) => {
   }
   objectCountries[organizCode].languages[langCode].name = country.nativeName;
 };
-console.log(objectCountries);
+console.log(objectCountries.other.languages);
 
 export const findLeng = (countries) => {
   let euCountries = countries.filter((country) => {
@@ -126,7 +134,9 @@ export const findLeng = (countries) => {
     makeNewObj(country.languages[0].iso639_1, "NAFTA", country)
   );
   euCountries = countries.filter((country) => {
-    return country.regionalBlocs?.some((region) => region.acronym === "other");
+    return country.regionalBlocs?.some(
+      (region) => region.acronym !== "NAFTA" && "AU" && "EU"
+    );
   });
 
   euCountries.forEach((country) =>
