@@ -7,6 +7,7 @@ export interface ICountry {
   population: number;
   regionalBlocs: Array<regionalBlocs>;
   area: number;
+  nativeName: string;
   currencies: [
     {
       code: string;
@@ -28,17 +29,28 @@ export interface regBlocs {
     countries: string[];
     population: 0;
     languages: {};
-    currencies: [];
+    currencies: string[];
   };
-  NAFTA: { countries: string[]; population: 0; languages: {}; currencies: [] };
-  AU: { countries: string[]; population: 0; languages: {}; currencies: [] };
-  other: { countries: string[]; population: 0; languages: {}; currencies: [] };
+  NAFTA: {
+    countries: string[];
+    population: 0;
+    languages: {};
+    currencies: string[];
+  };
+  AU: {
+    countries: string[];
+    population: 0;
+    languages: {};
+    currencies: string[];
+  };
+  other: {
+    countries: string[];
+    population: 0;
+    languages: {};
+    currencies: string[];
+  };
 }
 
 export interface currencies {
-  currencies: [
-    {
-      name: string;
-    }
-  ];
+  name: string;
 }

@@ -14,6 +14,6 @@ export function getPopulation(data) {
       });
     } else objectCountries.other.population += el.population;
   }
-  console.log(objectCountries);
+
   return objectCountries;
 }

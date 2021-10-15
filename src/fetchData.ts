@@ -1,6 +1,6 @@
 import { getPopulation } from "./getPopulation";
 import { getNativeName } from "./script";
-import { findLeng } from "./script";
+import { findLang } from "./script";
 
 export const fetchData = async () => {
   const url = "https://restcountries.com/v2/all";
@@ -8,7 +8,7 @@ export const fetchData = async () => {
   const data = await res.json();
   getNativeName(data);
   getPopulation(data);
-  findLeng(data);
+  findLang(data);
 
   // getLanguages(data);
 
