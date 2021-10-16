@@ -1,4 +1,4 @@
-import { getPopulation } from "./getPopulation";
+// import { getPopulation } from "./getPopulation";
 import { getNativeName } from "./script";
 import { findLang } from "./script";
 
@@ -7,7 +7,7 @@ export const fetchData = async () => {
   const res = await fetch(url);
   const data = await res.json();
   getNativeName(data);
-  getPopulation(data);
+  // getPopulation(data);
   findLang(data);
 
   // getLanguages(data);
