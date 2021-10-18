@@ -1,4 +1,4 @@
-import { regBlocs } from "./types";
+import { regBlocs, ILanguage } from "./types";
 
 export const objectCountries: regBlocs = {
   EU: {

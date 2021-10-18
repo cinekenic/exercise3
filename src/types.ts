@@ -8,6 +8,10 @@ export interface ICountry {
   regionalBlocs: Array<regionalBlocs>;
   area: number;
   nativeName: string;
+  alpha3Code: string;
+  languages: {
+    [key: string]: ILanguages;
+  };
   currencies: [
     {
       code: string;
@@ -17,40 +21,36 @@ export interface ICountry {
   ];
 }
 
+interface ILanguages {
+  iso639_1: string;
+}
+
 export interface ICountries {
-  countries: [];
+  countries: string[];
   population: number;
-  languages: {};
-  currencies: [];
+  languages: {
+    [key: string]: ILanguage;
+  };
+  currencies: string[];
 }
 
 export interface regBlocs {
-  EU: {
-    countries: string[];
-    population: 0;
-    languages: {};
-    currencies: string[];
-  };
-  NAFTA: {
-    countries: string[];
-    population: 0;
-    languages: {};
-    currencies: string[];
-  };
-  AU: {
-    countries: string[];
-    population: 0;
-    languages: {};
-    currencies: string[];
-  };
-  other: {
-    countries: string[];
-    population: 0;
-    languages: {};
-    currencies: string[];
-  };
+  EU: ICountries;
+  // [key: organization]:ICountries
+  NAFTA: ICountries;
+  AU: ICountries;
+  other: ICountries;
 }
 
 export interface currencies {
   name: string;
 }
+
+export interface ILanguage {
+  countries: string[];
+  population: number;
+  area: number;
+  name: string;
+}
+
+export type organization = "EU" | "AU" | "NAFTA" | "other";
