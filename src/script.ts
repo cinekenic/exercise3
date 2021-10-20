@@ -12,6 +12,8 @@ import { objectCountries } from "./objectCountries";
 const countriesFromRegions = ["EU", "AU", "NAFTA", "other"];
 const organizationList = ["EU", "AU", "NAFTA"];
 
+
+
 const makeNewObj = (
   langCode: string,
   organizCode: organization,
@@ -26,23 +28,24 @@ const makeNewObj = (
       name: "",
     };
   }
+  const newInstance = objectCountries[organizCode].languages[langCode]
   // console.log(country);
-  objectCountries[organizCode].languages[langCode].countries.push(
+  newInstance.countries.push(
     country.alpha3Code
   );
-  objectCountries[organizCode].languages[langCode].population +=
+  newInstance.population +=
     country.population;
   if (typeof country.area !== "undefined") {
-    objectCountries[organizCode].languages[langCode].area += country.area;
+    newInstance.area += country.area;
   }
-  objectCountries[organizCode].languages[langCode].name = langNativeName;
+  newInstance.name = langNativeName;
 };
 
 export const findLang = (countries) => {
   const acronims: organization[] = ["EU", "AU", "NAFTA"];
 
   acronims.forEach((el) => {
-    const euCountries: ICountry[] = countries.filter((country) => {
+    const countriesItems: ICountry[] = countries.filter((country) => {
       return country.regionalBlocs?.some((region) => region.acronym === el);
     });
     //-------------------------------------------------------------------
@@ -51,19 +54,19 @@ export const findLang = (countries) => {
 
     //dodawanie do pierwszej tablicy
 
-    euCountries.forEach((ell) => {
-      objectCountries[el].countries.push(ell.name);
-      objectCountries[el].population += ell.population;
+    countriesItems.forEach((item) => {
+      objectCountries[el].countries.push(item.name);
+      objectCountries[el].population += item.population;
 
-      if (ell.currencies !== undefined) {
-        for (let AUCurrency of ell.currencies) {
-          if (objectCountries[el].currencies.indexOf(AUCurrency.name)) {
-            objectCountries[el].currencies.push(AUCurrency.name);
+      if (item.currencies !== undefined) {
+        for (let currency of item.currencies) {
+          if (objectCountries[el].currencies.indexOf(currency.name)) {
+            objectCountries[el].currencies.push(currency.name);
           }
         }
       }
 
-      ell.languages.forEach(lang => makeNewObj(lang.iso639_1, el, ell, lang.nativeName))
+      item.languages.forEach(lang => makeNewObj(lang.iso639_1, el, item, lang.nativeName))
     });
   });
 
@@ -79,11 +82,11 @@ export const findLang = (countries) => {
 
   //dodawanie other
 
-  otherCountries.forEach((ell: ICountry) => {
-    objectCountries["other"].countries.push(ell.name);
-    objectCountries["other"].population += ell.population;
-    if (ell.currencies !== undefined) {
-      for (let AUCurrency of ell.currencies) {
+  otherCountries.forEach((item: ICountry) => {
+    objectCountries["other"].countries.push(item.name);
+    objectCountries["other"].population += item.population;
+    if (item.currencies !== undefined) {
+      for (let AUCurrency of item.currencies) {
         if (objectCountries.other.currencies.indexOf(AUCurrency.name) == -1) {
           objectCountries["other"].currencies.push(AUCurrency.name);
         }
@@ -172,9 +175,11 @@ ${leastCountries[0][0]}`);
     
     //-----------------------------------
     const objekt = Object.values(obj[country])
+    
     if(country !== 'other'){
       populationArray.push([country, objekt[1]])  
       populationArray.sort((a: any, b: any) => b[1] - a[1]);
+      
     }  
   } 
   console.log(`${populationArray[0][0]} : organizacja o największej populacji`);
@@ -182,7 +187,7 @@ ${leastCountries[0][0]}`);
 
 //-------------------------------------------
 
-const getOrganisationsArea = (countries, organizations) => {
+const getOrganisationsArea = (countries: regBlocs, organizations) => {
   return organizations.map(organization => {
     return [organization, Object.entries(countries[organization].languages).reduce((area, item) => item[1]['area'] + area, 0)]
   })
@@ -211,12 +216,13 @@ const densityByOrganisation = (countries, organizations) => {
 //-----------------------------------------------------------
 
 //Natywna nazwa języka wykorzystywanego w największej liczbie krajów,
-const getMostUsefullLanguage = (countries, regions) => {
- 
-  let languages = [];
+const getMostUsefullLanguage = (countries: regBlocs, regions: string[]) => {
 
+  let languages = [];
+  
   regions.forEach(region => {
     Object.entries(countries[region].languages).forEach(lang => {
+     
    
       if(lang[0] !== 'undefined'){
         if(!languages.find(el => el[lang[1].name])){
@@ -226,18 +232,18 @@ const getMostUsefullLanguage = (countries, regions) => {
         }
         else{
           const index = languages.findIndex(el => el[lang[1].name]);
+          
           languages[index][lang[1].name] += lang[1].countries.length;
         }
       }
     })
   })
 
- 
 
-  languages.sort((a,b) => Object.values(b)[0] - Object.values(a)[0])
-
-
+  languages.sort((a:number,b:number) => Object.values(b)[0] - Object.values(a)[0])
+  
   console.log('Natywną nazwę języka wykorzystywanego w największej liczbie krajów:', Object.keys(languages[0])[0])
+  return languages
  
 }
 
@@ -247,7 +253,7 @@ const getMostUsefullLanguage = (countries, regions) => {
 
 const getLessUsefullLanguage = (countries, regions) =>{
   let languages = [];
-  const arrCheckedValue = []
+ 
   regions.forEach(region => {
 
   Object.entries(countries[region].languages).forEach(lang =>{
@@ -257,26 +263,16 @@ const getLessUsefullLanguage = (countries, regions) =>{
  
         const obj = {}
        obj[lang[1].population] = lang[1].name
-
-  languages.indexOf(obj)=== -1? languages.push(obj): console.log('nic');
-  //  languages.push(obj)
-
+  
+   languages.push(obj)
    
      } 
-     else{
-       const index = languages.findIndex(el => el[lang[1].population])
-      
-   
-       languages[index][lang[1].population] += lang[1].population
-      }
     }
-  })
-  
+  }) 
 })
-languages.sort((a,b) => Object.keys(a)[0] - Object.keys(b)[0])
-console.log('Natywna nazwa języka wykorzystywanego przez najmniejszą liczbę ludzi',  Object.values(languages[0])[0])
 console.log(languages);
-
+languages.sort((a:  string ,b: string) => Object.keys(a)[0] - Object.keys(b)[0])
+console.log('Natywna nazwa języka wykorzystywanego przez najmniejszą liczbę ludzi',  Object.values(languages[0])[0])
 }
 
 //------------------------------------------------------------
@@ -285,30 +281,35 @@ console.log(languages);
 
 const useOfLanguage = (countries: regBlocs, regions: string[])=>{
   let languages = [];
+
   regions.forEach(region =>{
+
     Object.entries(countries[region].languages).forEach(lang=>{
-      if(lang[0] !== 'undefined'){
-        // console.log(lang[1].area, lang[1].name);
+
+      if(lang[0] !== 'undefined'){ 
         if(!languages.find(el => el[lang[1].name])){
-       
-          const obj = {}
+          const obj = {}     
           obj[lang[1].area] = lang[1].name
+              
           languages.push(obj)
-          
-       
-        } else{
-          const index = languages.findIndex(el => el[lang[1].area])
-         
-          languages[index][lang[1].area] += lang[1].area
-        
-         }
+                
+        } 
       }
     })
   })
-  languages.sort((a,b) => Object.keys(b)[0] - Object.keys(a)[0])
-//  console.log(languages);
+
+  languages.sort((a , b) => Object.keys(b)[0] - Object.keys(a)[0])
+
+  compare(Object.values(languages))
+ console.log( `Natywne nazwy języków wykorzystywanych na największym ${Object.values(languages[0])[0]} i najmniejszym ${ Object.values(languages.at(-1))} obszarze.` );
 }
 
+
+const compare = (language)=>{
+if(language.at(0) == language.at(1)){
+  console.log(language.at(0), language.at(1), 'są wykożystywanie na równym obszarze.');
+}
+}
 
 //puste tablice w konsoli
 const init = async () => {
