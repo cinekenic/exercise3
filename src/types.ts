@@ -9,9 +9,8 @@ export interface ICountry {
   area: number;
   nativeName: string;
   alpha3Code: string;
-  languages: {
-    [key: string]: ILanguages;
-  };
+  languages: ILanguages[];
+    
   currencies: [
     {
       code: string;
@@ -23,6 +22,7 @@ export interface ICountry {
 
 interface ILanguages {
   iso639_1: string;
+  nativeName: string
 }
 
 export interface ICountries {
