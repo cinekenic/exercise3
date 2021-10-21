@@ -208,45 +208,61 @@ const densityByOrganisation = (countries, organizations) => {
 
 //Natywna nazwa języka wykorzystywanego w największej liczbie krajów,
 const getMostUsefullLanguage = (countries: regBlocs, regions: string[]) => {
-  let languages = [];
+  // let languages = [];
 
-  regions.forEach((region) => {
-    Object.entries(countries[region].languages).forEach((lang) => {
-      if (lang[0] !== "undefined") {
-        if (!languages.find((el) => el[lang[1].name])) {
-          const obj = {};
-          obj[lang[1].name] = lang[1].countries.length;
-          languages.push(obj);
-          console.log(languages);
-        } else {
-          const index = languages.findIndex((el) => el[lang[1].name]);
+  // regions.forEach((region) => {
+  //   Object.entries(countries[region].languages).forEach((lang) => {
+  //     if (lang[0] !== "undefined") {
+  //       if (!languages.find((el) => el[lang[1].name])) {
+  //         const obj = {};
+  //         obj[lang[1].name] = lang[1].countries.length;
+  //         languages.push(obj);
+  //         console.log(languages);
+  //       } else {
+  //         const index = languages.findIndex((el) => el[lang[1].name]);
 
-          languages[index][lang[1].name] += lang[1].countries.length;
-        }
+  //         languages[index][lang[1].name] += lang[1].countries.length;
+  //       }
+  //     }
+  //   });
+  // });
+
+  // languages.sort(
+  //   (a: number, b: number) => Object.values(b)[0] - Object.values(a)[0]
+  // );
+
+  // console.log(
+  //   "Natywną nazwę języka wykorzystywanego w największej liczbie krajów:",
+  //   Object.keys(languages[0])[0]
+  // );
+  // return languages;
+  const result = {};
+  for (let country in countries) {
+    for (let language in countries[country].languages) {
+      if (!result[countries[country].languages[language].name]) {
+        result[countries[country].languages[language].name] = 0;
       }
-    });
-  });
-
-  languages.sort(
-    (a: number, b: number) => Object.values(b)[0] - Object.values(a)[0]
-  );
+      result[countries[country].languages[language].name] +=
+        countries[country].languages[language].countries.length;
+    }
+  }
+  const languages = Object.entries(result);
+  languages.sort((a, b) => b[1] - a[1]);
 
   console.log(
     "Natywną nazwę języka wykorzystywanego w największej liczbie krajów:",
-    Object.keys(languages[0])[0]
+    languages[0][0]
   );
-  return languages;
 };
 
 //-----------------------------------------------------------------
 
 //Natywna nazwa języka wykorzystywanego przez najmniejszą liczbę ludzi
 
-const getLessUsefullLanguage = (countries) => {
+const getLessUsefullLanguage = (countries: regBlocs) => {
   const result = {};
   for (let country in countries) {
     for (let language in countries[country].languages) {
-      console.log(countries[country].languages);
       if (!result[countries[country].languages[language].name]) {
         result[countries[country].languages[language].name] = 0;
       }
