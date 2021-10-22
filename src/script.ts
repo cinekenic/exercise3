@@ -13,7 +13,7 @@ const countriesFromRegions = ["EU", "AU", "NAFTA", "other"];
 const organizationList: organization[] = ["EU", "AU", "NAFTA"];
 let otherCountries: ICountry[] = [];
 
-const makeNewObj = (
+export const makeNewObj = (
   langCode: string,
   organizCode: organization,
   country: ICountry,
@@ -96,6 +96,8 @@ export const findLang = (countries) => {
       makeNewObj(lang.iso639_1, "other", country, lang.nativeName)
     );
   });
+  console.log(objectCountries);
+  return objectCountries;
 };
 
 const sortCountriesName = (obj: regBlocs, region: string[]) => {
@@ -207,7 +209,7 @@ const densityByOrganisation = (countries, organizations) => {
 //-----------------------------------------------------------
 
 //Natywna nazwa języka wykorzystywanego w największej liczbie krajów,
-const getMostUsefullLanguage = (countries: regBlocs, regions: string[]) => {
+const getMostUsefullLanguage = (countries: regBlocs) => {
   // let languages = [];
 
   // regions.forEach((region) => {
@@ -246,7 +248,7 @@ const getMostUsefullLanguage = (countries: regBlocs, regions: string[]) => {
         countries[country].languages[language].countries.length;
     }
   }
-  const languages = Object.entries(result);
+  const languages: [string, number][] = Object.entries(result);
   languages.sort((a, b) => b[1] - a[1]);
 
   console.log(
@@ -271,7 +273,7 @@ const getLessUsefullLanguage = (countries: regBlocs) => {
     }
   }
 
-  const languages = Object.entries(result);
+  const languages: [string, number][] = Object.entries(result);
   languages.sort((a, b) => a[1] - b[1]);
 
   console.log(
@@ -297,14 +299,17 @@ const useOfLanguage = (countries: regBlocs) => {
     }
   }
 
-  const languages = Object.entries(result);
-  languages.sort((a, b) => b[1] - a[1]);
+  const languages: [string, number][] = Object.entries(result);
+
+  languages.sort((a: [string, number], b: [string, number]) => b[1] - a[1]);
 
   console.log(
-    `Natywne nazwy języków wykorzystywanych na największym ${languages.at(
-      0
-    )} i najmniejszym ${languages.at(-1)} obszarze.`
+    `Natywne nazwy języków wykorzystywanych na największym ${
+      languages[0][0]
+    } i najmniejszym ${languages[languages.length - 1][0]} obszarze.`
   );
+  compare(languages);
+  return [languages[0], languages[languages.length - 1][0]];
 };
 
 const compare = (language) => {
@@ -325,7 +330,7 @@ const init = async () => {
   sortCountriesName(objectCountries, countriesFromRegions);
   densityByOrganisation(objectCountries, organizationList);
   getAreas(objectCountries, organizationList);
-  getMostUsefullLanguage(objectCountries, countriesFromRegions);
+  getMostUsefullLanguage(objectCountries);
   getLessUsefullLanguage(objectCountries);
   useOfLanguage(objectCountries);
 };
