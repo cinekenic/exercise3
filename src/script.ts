@@ -12,7 +12,6 @@ import { objectCountries } from "./objectCountries";
 const countriesFromRegions = ["EU", "AU", "NAFTA", "other"];
 export const organizationList: organization[] = ["EU", "AU", "NAFTA"];
 let otherCountries: ICountry[] = [];
-
 export const makeNewObj = (
   langCode: string,
   organizCode: organization,
@@ -32,7 +31,7 @@ export const makeNewObj = (
   // console.log(country);
   newInstance.countries.push(country.alpha3Code);
   newInstance.population += country.population;
-  if (typeof country.area !== "undefined") {
+  if (country.area !== undefined) {
     newInstance.area += country.area;
   }
   newInstance.name = langNativeName;
@@ -89,16 +88,20 @@ export const findLang = (countries) => {
         }
       }
     }
+    item.languages.forEach((lang) =>
+      makeNewObj(lang.iso639_1, "other", item, lang.nativeName)
+    );
   });
 
   //----------------------------------------------------------
 
   //wywoływanie funkcji makeNewObj w celu uzyskania danych w languages
-  otherCountries.forEach((country: ICountry) => {
-    country.languages.forEach((lang) =>
-      makeNewObj(lang.iso639_1, "other", country, lang.nativeName)
-    );
-  });
+
+  // otherCountries.forEach((country: ICountry) => {
+  //   country.languages.forEach((lang) =>
+  //     makeNewObj(lang.iso639_1, "other", country, lang.nativeName)
+  //   );
+  // });
 
   return objectCountries;
 };

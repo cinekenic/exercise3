@@ -1,16 +1,16 @@
 export interface regionalBlocs {
-  acronym: string;
+  acronym?: string;
 }
 
 export interface ICountry {
   name: string;
   population: number;
-  regionalBlocs: Array<regionalBlocs>;
+  regionalBlocs?: Array<regionalBlocs>;
   area: number;
   nativeName: string;
   alpha3Code: string;
   languages: ILanguages[];
-    
+
   currencies: [
     {
       code: string;
@@ -22,7 +22,7 @@ export interface ICountry {
 
 interface ILanguages {
   iso639_1: string;
-  nativeName: string
+  nativeName: string;
 }
 
 export interface ICountries {
@@ -54,3 +54,21 @@ export interface ILanguage {
 }
 
 export type organization = "EU" | "AU" | "NAFTA" | "other";
+
+export interface TabWithStates {
+  name: string;
+  population: number;
+  area?: number;
+  density?: number;
+  id?: number;
+  alpha3Code?: string;
+  regionalBlocs?: Array<{ acronym: string }>;
+  nativeName?: string;
+  currencies?: Array<{ code: string; name: string; symbol: string }>;
+  languages?: Array<{
+    iso639_1: string;
+    iso639_2: string;
+    name: string;
+    nativeName: string;
+  }>;
+}
